@@ -15,6 +15,16 @@ public class NetworkActivityIndicatorManager {
 
     private init() {}
 
+    deinit {
+        let center = NSNotificationCenter.defaultCenter()
+        for name in incrementNotificationNames {
+            center.removeObserver(self, name: name, object: nil)
+        }
+        for name in decrementNotificationNames {
+            center.removeObserver(self, name: name, object: nil)
+        }
+    }
+
     // MARK: Counter
 
     public private(set) var counter = 0
@@ -49,6 +59,35 @@ public class NetworkActivityIndicatorManager {
             self.counter = 0
             self.updateNetworkActivityIndicator()
         }
+    }
+
+    // MARK: Notifications
+
+    private var incrementNotificationNames = Set<String>()
+    private var decrementNotificationNames = Set<String>()
+
+    public func addIncrementObserver(name: String) {
+        guard !incrementNotificationNames.contains(name) else { return }
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(increment), name: name, object: nil)
+        incrementNotificationNames.insert(name)
+    }
+
+    public func addDecrementObserver(name: String) {
+        guard !decrementNotificationNames.contains(name) else { return }
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(decrement), name: name, object: nil)
+        decrementNotificationNames.insert(name)
+    }
+
+    public func removeIncrementObserver(name: String) {
+        guard incrementNotificationNames.contains(name) else { return }
+        NSNotificationCenter.defaultCenter().removeObserver(self, name: name, object: nil)
+        incrementNotificationNames.remove(name)
+    }
+
+    public func removeDecrementObserver(name: String) {
+        guard decrementNotificationNames.contains(name) else { return }
+        NSNotificationCenter.defaultCenter().removeObserver(self, name: name, object: nil)
+        decrementNotificationNames.remove(name)
     }
 
     // 必ず lockQueue で実行すること

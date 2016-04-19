@@ -14,6 +14,7 @@ github "ymyzk/NetworkActivityIndicatorManager"
 ```
 
 ## Usage
+### Manually
 ```swift
 import NetworkActivityIndicatorManager
 
@@ -22,6 +23,23 @@ let manager = NetworkActivityIndicatorManager.sharedManager
 manager.increment()
 // Some networking operations here
 manager.decrement()
+```
+
+### Notifications
+```swift
+import NetworkActivityIndicatorManager
+
+let manager = NetworkActivityIndicatorManager.sharedManager
+
+let incrementNotification = "increment"
+let decrementNotification = "decrement"
+
+manager.addIncrementObserver(incrementNotification)
+manager.addDecrementObserver(decrementNotification)
+
+NSNotificationCenter.defaultCenter().postNotificationName(incrementNotification, object: nil)
+// Some networking operations here
+NSNotificationCenter.defaultCenter().postNotificationName(decrementNotification, object: nil)
 ```
 
 ## License
