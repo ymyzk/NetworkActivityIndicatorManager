@@ -9,27 +9,41 @@ import Foundation
 import UIKit
 
 public class NetworkActivityIndicatorManager {
-    private init() {}
+    // MARK: Life cycle
+
     public static let sharedManager = NetworkActivityIndicatorManager()
+
+    private init() {}
+
+    // MARK: Counter
 
     public private(set) var counter = 0
     public private(set) var isNetworkActivityIndicatorVisible = false
     private let lockQueue = dispatch_queue_create("com.ymyzk.NetworkActivityIndicatorManager.LockQueue", nil)
 
-    public func increment() {
+    /**
+     Increment counter & update network activity indicator
+     */
+    @objc public func increment() {
         dispatch_sync(lockQueue) {
             self.counter += 1
             self.updateNetworkActivityIndicator()
         }
     }
 
-    public func decrement() {
+    /**
+     Decrement counter & update network activity indicator
+     */
+    @objc public func decrement() {
         dispatch_sync(lockQueue) {
             self.counter = max(self.counter - 1, 0)
             self.updateNetworkActivityIndicator()
         }
     }
 
+    /**
+     Reset counter & update network activity indicator
+     */
     public func reset() {
         dispatch_sync(lockQueue) {
             self.counter = 0
