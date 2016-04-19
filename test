@@ -1,0 +1,4 @@
+#!/bin/bash
+set -ex
+
+xcodebuild test -workspace NetworkActivityIndicatorManager.xcworkspace -scheme NetworkActivityIndicatorManager -destination "platform=iOS Simulator,name=iPhone 6s,OS=9.3"
