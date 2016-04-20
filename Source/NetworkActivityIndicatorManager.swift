@@ -19,10 +19,20 @@ public class NetworkActivityIndicatorManager {
         unregisterForAllNotifications()
     }
 
+    /// Whether the network activity indicator is currently visible
+    public private(set) var isNetworkActivityIndicatorVisible: Bool = false {
+        didSet {
+            guard isNetworkActivityIndicatorVisible != oldValue else { return }
+
+            dispatch_async(dispatch_get_main_queue()) {
+                UIApplication.sharedApplication().networkActivityIndicatorVisible = self.isNetworkActivityIndicatorVisible
+            }
+        }
+    }
+
     // MARK: Counter
 
     public private(set) var counter = 0
-    public private(set) var isNetworkActivityIndicatorVisible = false
     private let lock = NSLock()
 
     /**
@@ -58,6 +68,15 @@ public class NetworkActivityIndicatorManager {
         self.updateNetworkActivityIndicator()
     }
 
+    private func updateNetworkActivityIndicator() {
+        // Ensure lock is locked
+        guard !lock.tryLock() else {
+            lock.unlock()
+            fatalError("not locked")
+        }
+        self.isNetworkActivityIndicatorVisible = self.counter > 0
+    }
+
     // MARK: Notifications
 
     public func registerForIncrementNotification(name: String) {
@@ -86,18 +105,5 @@ public class NetworkActivityIndicatorManager {
 
     @objc private func decrementForNotification() {
         decrement()
-    }
-
-    private func updateNetworkActivityIndicator() {
-        // Ensure lock is locked
-        guard !lock.tryLock() else {
-            lock.unlock()
-            fatalError("not locked")
-        }
-        let isVisible = self.counter > 0
-        self.isNetworkActivityIndicatorVisible = isVisible
-        dispatch_async(dispatch_get_main_queue()) {
-            UIApplication.sharedApplication().networkActivityIndicatorVisible = isVisible
-        }
     }
 }
