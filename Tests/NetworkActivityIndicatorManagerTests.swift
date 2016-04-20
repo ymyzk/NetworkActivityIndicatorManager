@@ -90,11 +90,11 @@ class NetworkActivityIndicatorManagerTests: XCTestCase {
     func testIncrementObserver() {
         let notificationCenter = NSNotificationCenter.defaultCenter()
         let notificationName = "com.ymyzk.NetworkActivityIndicatorManager.IncrementNotification"
-        self.manager.addIncrementObserver(notificationName)
+        self.manager.registerForIncrementNotification(notificationName)
         expect(self.manager.counter) == 0
         notificationCenter.postNotificationName(notificationName, object: nil)
         expect(self.manager.counter) == 1
-        self.manager.removeIncrementObserver(notificationName)
+        self.manager.unregisterForIncrementNotification(notificationName)
         notificationCenter.postNotificationName(notificationName, object: nil)
         expect(self.manager.counter) == 1
     }
@@ -105,10 +105,10 @@ class NetworkActivityIndicatorManagerTests: XCTestCase {
         self.manager.increment()
         self.manager.increment()
         expect(self.manager.counter) == 2
-        self.manager.addDecrementObserver(notificationName)
+        self.manager.registerForDecrementNotification(notificationName)
         notificationCenter.postNotificationName(notificationName, object: nil)
         expect(self.manager.counter) == 1
-        self.manager.removeDecrementObserver(notificationName)
+        self.manager.unregisterForDecrementNotification(notificationName)
         notificationCenter.postNotificationName(notificationName, object: nil)
         expect(self.manager.counter) == 1
     }

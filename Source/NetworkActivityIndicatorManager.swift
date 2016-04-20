@@ -16,13 +16,7 @@ public class NetworkActivityIndicatorManager {
     private init() {}
 
     deinit {
-        let center = NSNotificationCenter.defaultCenter()
-        for name in incrementNotificationNames {
-            center.removeObserver(self, name: name, object: nil)
-        }
-        for name in decrementNotificationNames {
-            center.removeObserver(self, name: name, object: nil)
-        }
+        unregisterForAllNotifications()
     }
 
     // MARK: Counter
@@ -34,7 +28,7 @@ public class NetworkActivityIndicatorManager {
     /**
      Increment counter & update network activity indicator
      */
-    @objc public func increment() {
+    public func increment() {
         lock.lock()
         defer { lock.unlock() }
 
@@ -45,7 +39,7 @@ public class NetworkActivityIndicatorManager {
     /**
      Decrement counter & update network activity indicator
      */
-    @objc public func decrement() {
+    public func decrement() {
         lock.lock()
         defer { lock.unlock() }
 
@@ -66,31 +60,32 @@ public class NetworkActivityIndicatorManager {
 
     // MARK: Notifications
 
-    private var incrementNotificationNames = Set<String>()
-    private var decrementNotificationNames = Set<String>()
-
-    public func addIncrementObserver(name: String) {
-        guard !incrementNotificationNames.contains(name) else { return }
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(increment), name: name, object: nil)
-        incrementNotificationNames.insert(name)
+    public func registerForIncrementNotification(name: String) {
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(incrementForNotification), name: name, object: nil)
     }
 
-    public func addDecrementObserver(name: String) {
-        guard !decrementNotificationNames.contains(name) else { return }
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(decrement), name: name, object: nil)
-        decrementNotificationNames.insert(name)
+    public func registerForDecrementNotification(name: String) {
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(decrementForNotification), name: name, object: nil)
     }
 
-    public func removeIncrementObserver(name: String) {
-        guard incrementNotificationNames.contains(name) else { return }
+    public func unregisterForIncrementNotification(name: String) {
         NSNotificationCenter.defaultCenter().removeObserver(self, name: name, object: nil)
-        incrementNotificationNames.remove(name)
     }
 
-    public func removeDecrementObserver(name: String) {
-        guard decrementNotificationNames.contains(name) else { return }
+    public func unregisterForDecrementNotification(name: String) {
         NSNotificationCenter.defaultCenter().removeObserver(self, name: name, object: nil)
-        decrementNotificationNames.remove(name)
+    }
+
+    private func unregisterForAllNotifications() {
+        NSNotificationCenter.defaultCenter().removeObserver(self)
+    }
+
+    @objc private func incrementForNotification() {
+        increment()
+    }
+
+    @objc private func decrementForNotification() {
+        decrement()
     }
 
     private func updateNetworkActivityIndicator() {

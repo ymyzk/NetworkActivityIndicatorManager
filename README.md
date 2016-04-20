@@ -37,8 +37,8 @@ let manager = NetworkActivityIndicatorManager.sharedManager
 let incrementNotification = "increment"
 let decrementNotification = "decrement"
 
-manager.addIncrementObserver(incrementNotification)
-manager.addDecrementObserver(decrementNotification)
+manager.registerForIncrementNotification(incrementNotification)
+manager.registerForDecrementNotification(decrementNotification)
 
 NSNotificationCenter.defaultCenter().postNotificationName(incrementNotification, object: nil)
 // Some networking operations here
