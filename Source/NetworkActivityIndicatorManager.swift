@@ -29,15 +29,31 @@ public class NetworkActivityIndicatorManager {
 
     public private(set) var counter = 0
     public private(set) var isNetworkActivityIndicatorVisible = false
-    private let lockQueue = dispatch_queue_create("com.ymyzk.NetworkActivityIndicatorManager.LockQueue", nil)
+    private let lockQueue = dispatch_queue_create("com.ymyzk.NetworkActivityIndicatorManager.LockQueue", DISPATCH_QUEUE_SERIAL)
+
+    /**
+     Run a block in serial queue for locking
+     */
+    private func runInLockQueue(block: dispatch_block_t) {
+        dispatch_sync(lockQueue, block)
+    }
+
+    /**
+     Run a block in serial queue for locking & update network activity indicator
+     */
+    private func runAndUpdateIndicatorInLockQueue(block: dispatch_block_t) {
+        self.runInLockQueue() {
+            block()
+            self.updateNetworkActivityIndicator()
+        }
+    }
 
     /**
      Increment counter & update network activity indicator
      */
     @objc public func increment() {
-        dispatch_sync(lockQueue) {
+        runAndUpdateIndicatorInLockQueue() {
             self.counter += 1
-            self.updateNetworkActivityIndicator()
         }
     }
 
@@ -45,9 +61,8 @@ public class NetworkActivityIndicatorManager {
      Decrement counter & update network activity indicator
      */
     @objc public func decrement() {
-        dispatch_sync(lockQueue) {
+        runAndUpdateIndicatorInLockQueue() {
             self.counter = max(self.counter - 1, 0)
-            self.updateNetworkActivityIndicator()
         }
     }
 
@@ -55,9 +70,8 @@ public class NetworkActivityIndicatorManager {
      Reset counter & update network activity indicator
      */
     public func reset() {
-        dispatch_sync(lockQueue) {
+        runAndUpdateIndicatorInLockQueue() {
             self.counter = 0
-            self.updateNetworkActivityIndicator()
         }
     }
 
