@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "NetworkActivityIndicatorManager"
-  s.version      = "0.1.0"
+  s.version      = "0.2.0"
   s.summary      = "A manager library of the network activity indicator."
   s.description  = <<-DESC
                    NetworkActivityIndicatorManager is a manager library of the network activity indicator in the status bar.

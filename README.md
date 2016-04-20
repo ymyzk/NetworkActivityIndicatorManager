@@ -13,6 +13,9 @@ Add `NetworkActivityIndicatorManager` to your `Cartfile` (package dependency) or
 github "ymyzk/NetworkActivityIndicatorManager"
 ```
 
+### CocoaPods
+TBA
+
 ## Usage
 ### Manually
 ```swift
