@@ -2,7 +2,7 @@
 //  NetworkActivityIndicatorManagerTests.swift
 //  NetworkActivityIndicatorManagerTests
 //
-//  Copyright © 2016 Yusuke Miyazaki. All rights reserved.
+//  Copyright © 2016 Yusuke Miyazaki.
 //
 
 import XCTest

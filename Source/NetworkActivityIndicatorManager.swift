@@ -2,7 +2,7 @@
 //  NetworkActivityIndicatorManager.swift
 //  NetworkActivityIndicatorManager
 //
-//  Copyright © 2016 Yusuke Miyazaki. All rights reserved.
+//  Copyright © 2016 Yusuke Miyazaki.
 //
 
 import Foundation
