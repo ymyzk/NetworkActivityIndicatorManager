@@ -53,5 +53,15 @@ NSNotificationCenter.defaultCenter().postNotificationName(incrementNotification,
 NSNotificationCenter.defaultCenter().postNotificationName(decrementNotification, object: nil)
 ```
 
+#### SDWebImage
+NetworkActivityIndicatorManager can receive notifications from [SDWebImage](https://github.com/rs/SDWebImage).
+```swift
+import NetworkActivityIndicatorManager
+import SDWebImage
+
+let manager = NetworkActivityIndicatorManager.sharedManager
+manager.registerForIncrementNotification(SDWebImageDownloadStartNotification)
+manager.registerForDecrementNotification(SDWebImageDownloadStopNotification)
+```
 ## License
 MIT License. See [LICENSE](LICENSE) for more information.
