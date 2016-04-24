@@ -53,8 +53,22 @@ NSNotificationCenter.defaultCenter().postNotificationName(incrementNotification,
 NSNotificationCenter.defaultCenter().postNotificationName(decrementNotification, object: nil)
 ```
 
+#### Alamofire
+NetworkActivityIndicatorManager can receive notifications from [Alamofire]().
+
+```swift
+import Alamofire
+import NetworkActivityIndicatorManager
+
+let manager = NetworkActivityIndicatorManager.sharedManager
+manager.registerForIncrementNotification(Notifications.Task.DidResume)
+manager.registerForDecrementNotification(Notifications.Task.DidSuspend)
+manager.registerForDecrementNotification(Notifications.Task.DidComplete)
+```
+
 #### SDWebImage
 NetworkActivityIndicatorManager can receive notifications from [SDWebImage](https://github.com/rs/SDWebImage).
+
 ```swift
 import NetworkActivityIndicatorManager
 import SDWebImage
@@ -63,5 +77,6 @@ let manager = NetworkActivityIndicatorManager.sharedManager
 manager.registerForIncrementNotification(SDWebImageDownloadStartNotification)
 manager.registerForDecrementNotification(SDWebImageDownloadStopNotification)
 ```
+
 ## License
 MIT License. See [LICENSE](LICENSE) for more information.
