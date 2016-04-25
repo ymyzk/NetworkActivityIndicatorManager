@@ -37,6 +37,8 @@ manager.decrement()
 ```
 
 ### Notifications
+By sending notifications, you can increment/decrement the counter.
+
 ```swift
 import NetworkActivityIndicatorManager
 
@@ -53,9 +55,20 @@ NSNotificationCenter.defaultCenter().postNotificationName(incrementNotification,
 NSNotificationCenter.defaultCenter().postNotificationName(decrementNotification, object: nil)
 ```
 
-#### Alamofire
-NetworkActivityIndicatorManager can receive notifications from [Alamofire]().
+Some libraries send notifications on start/end network activities.
 
+#### AFNetworking
+```swift
+import AFNetworking
+import NetworkActivityIndicatorManager
+
+let manager = NetworkActivityIndicatorManager.sharedManager
+manager.registerForIncrementNotification(AFNetworkingTaskDidResumeNotification
+manager.registerForDecrementNotification(AFNetworkingTaskDidSuspendNotification)
+manager.registerForDecrementNotification(AFNetworkingTaskDidCompleteNotification)
+```
+
+#### Alamofire
 ```swift
 import Alamofire
 import NetworkActivityIndicatorManager
@@ -67,8 +80,6 @@ manager.registerForDecrementNotification(Notifications.Task.DidComplete)
 ```
 
 #### SDWebImage
-NetworkActivityIndicatorManager can receive notifications from [SDWebImage](https://github.com/rs/SDWebImage).
-
 ```swift
 import NetworkActivityIndicatorManager
 import SDWebImage
