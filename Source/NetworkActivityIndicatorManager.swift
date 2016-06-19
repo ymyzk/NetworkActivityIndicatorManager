@@ -75,27 +75,27 @@ public class NetworkActivityIndicatorManager {
 
     // MARK: Notifications
 
-    // Register a notification to increment the counter
+    /// Register a notification to increment the counter
     public func registerForIncrementNotification(name: String) {
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(incrementForNotification), name: name, object: nil)
     }
 
-    // Register a notification to decrement the counter
+    /// Register a notification to decrement the counter
     public func registerForDecrementNotification(name: String) {
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(decrementForNotification), name: name, object: nil)
     }
 
-    // Unregister a notification to increment the counter
+    /// Unregister a notification to increment the counter
     public func unregisterForIncrementNotification(name: String) {
         NSNotificationCenter.defaultCenter().removeObserver(self, name: name, object: nil)
     }
 
-    // Unregister a notification to decrement the counter
+    /// Unregister a notification to decrement the counter
     public func unregisterForDecrementNotification(name: String) {
         NSNotificationCenter.defaultCenter().removeObserver(self, name: name, object: nil)
     }
 
-    // Unregister all notifications
+    /// Unregister all notifications
     private func unregisterForAllNotifications() {
         NSNotificationCenter.defaultCenter().removeObserver(self)
     }

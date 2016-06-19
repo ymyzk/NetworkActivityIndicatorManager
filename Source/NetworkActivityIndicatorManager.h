@@ -14,5 +14,3 @@ FOUNDATION_EXPORT double NetworkActivityIndicatorManagerVersionNumber;
 FOUNDATION_EXPORT const unsigned char NetworkActivityIndicatorManagerVersionString[];
 
 // In this header, you should import all the public headers of your framework using statements like #import <NetworkActivityIndicatorManager/PublicHeader.h>
-
-
