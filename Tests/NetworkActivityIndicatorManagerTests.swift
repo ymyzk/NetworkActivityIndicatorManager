@@ -56,7 +56,7 @@ class NetworkActivityIndicatorManagerTests: XCTestCase {
     }
 
     func testConcurrentExample() {
-        let queue = DispatchQueue.global(priority: DispatchQueue.GlobalQueuePriority.default)
+        let queue = DispatchQueue.global(qos: .default)
 
         for _ in 0..<5000 {
             queue.async {
