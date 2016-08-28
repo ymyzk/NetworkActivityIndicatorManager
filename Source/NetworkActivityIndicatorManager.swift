@@ -8,25 +8,25 @@
 import Foundation
 import UIKit
 
-public class NetworkActivityIndicatorManager {
+open class NetworkActivityIndicatorManager {
     // MARK: Life cycle
 
     /// The shared NetworkActivityIndicatorManager
-    public static let sharedManager = NetworkActivityIndicatorManager()
+    open static let sharedManager = NetworkActivityIndicatorManager()
 
-    private init() {}
+    fileprivate init() {}
 
     deinit {
         unregisterForAllNotifications()
     }
 
     /// Whether the network activity indicator is currently visible
-    public private(set) var isNetworkActivityIndicatorVisible: Bool = false {
+    open fileprivate(set) var isNetworkActivityIndicatorVisible: Bool = false {
         didSet {
             guard isNetworkActivityIndicatorVisible != oldValue else { return }
 
-            dispatch_async(dispatch_get_main_queue()) {
-                UIApplication.sharedApplication().networkActivityIndicatorVisible = self.isNetworkActivityIndicatorVisible
+            DispatchQueue.main.async {
+                UIApplication.shared.isNetworkActivityIndicatorVisible = self.isNetworkActivityIndicatorVisible
             }
         }
     }
@@ -34,11 +34,11 @@ public class NetworkActivityIndicatorManager {
     // MARK: Counter
 
     /// Number of running activities
-    public private(set) var counter = 0
-    private let lock = NSLock()
+    open fileprivate(set) var counter = 0
+    fileprivate let lock = NSLock()
 
     /// Increment counter & update network activity indicator
-    public func increment() {
+    open func increment() {
         lock.lock()
         defer { lock.unlock() }
 
@@ -47,7 +47,7 @@ public class NetworkActivityIndicatorManager {
     }
 
     /// Decrement counter & update network activity indicator
-    public func decrement() {
+    open func decrement() {
         lock.lock()
         defer { lock.unlock() }
 
@@ -56,7 +56,7 @@ public class NetworkActivityIndicatorManager {
     }
 
     /// Reset counter & update network activity indicator
-    public func reset() {
+    open func reset() {
         lock.lock()
         defer { lock.unlock() }
 
@@ -64,9 +64,9 @@ public class NetworkActivityIndicatorManager {
         self.updateNetworkActivityIndicator()
     }
 
-    private func updateNetworkActivityIndicator() {
+    fileprivate func updateNetworkActivityIndicator() {
         // Ensure lock is locked
-        guard !lock.tryLock() else {
+        guard !lock.try() else {
             lock.unlock()
             fatalError("not locked")
         }
@@ -76,35 +76,35 @@ public class NetworkActivityIndicatorManager {
     // MARK: Notifications
 
     /// Register a notification to increment the counter
-    public func registerForIncrementNotification(name: String) {
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(incrementForNotification), name: name, object: nil)
+    open func registerForIncrementNotification(_ name: String) {
+        NotificationCenter.default.addObserver(self, selector: #selector(incrementForNotification), name: NSNotification.Name(rawValue: name), object: nil)
     }
 
     /// Register a notification to decrement the counter
-    public func registerForDecrementNotification(name: String) {
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(decrementForNotification), name: name, object: nil)
+    open func registerForDecrementNotification(_ name: String) {
+        NotificationCenter.default.addObserver(self, selector: #selector(decrementForNotification), name: NSNotification.Name(rawValue: name), object: nil)
     }
 
     /// Unregister a notification to increment the counter
-    public func unregisterForIncrementNotification(name: String) {
-        NSNotificationCenter.defaultCenter().removeObserver(self, name: name, object: nil)
+    open func unregisterForIncrementNotification(_ name: String) {
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: name), object: nil)
     }
 
     /// Unregister a notification to decrement the counter
-    public func unregisterForDecrementNotification(name: String) {
-        NSNotificationCenter.defaultCenter().removeObserver(self, name: name, object: nil)
+    open func unregisterForDecrementNotification(_ name: String) {
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: name), object: nil)
     }
 
     /// Unregister all notifications
-    private func unregisterForAllNotifications() {
-        NSNotificationCenter.defaultCenter().removeObserver(self)
+    fileprivate func unregisterForAllNotifications() {
+        NotificationCenter.default.removeObserver(self)
     }
 
-    @objc private func incrementForNotification() {
+    @objc fileprivate func incrementForNotification() {
         increment()
     }
 
-    @objc private func decrementForNotification() {
+    @objc fileprivate func decrementForNotification() {
         decrement()
     }
 }

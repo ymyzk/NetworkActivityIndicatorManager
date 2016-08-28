@@ -10,7 +10,7 @@ import Nimble
 @testable import NetworkActivityIndicatorManager
 
 class NetworkActivityIndicatorManagerTests: XCTestCase {
-    private let manager = NetworkActivityIndicatorManager.sharedManager
+    fileprivate let manager = NetworkActivityIndicatorManager.sharedManager
 
     override func setUp() {
         super.setUp()
@@ -56,16 +56,16 @@ class NetworkActivityIndicatorManagerTests: XCTestCase {
     }
 
     func testConcurrentExample() {
-        let queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
+        let queue = DispatchQueue.global(priority: DispatchQueue.GlobalQueuePriority.default)
 
         for _ in 0..<5000 {
-            dispatch_async(queue) {
+            queue.async {
                 self.manager.increment()
             }
         }
 
         for _ in 0..<2000 {
-            dispatch_async(queue) {
+            queue.async {
                 self.manager.decrement()
             }
         }
@@ -74,7 +74,7 @@ class NetworkActivityIndicatorManagerTests: XCTestCase {
     }
 
     func testSerialPerformanceExample() {
-        self.measureBlock {
+        self.measure {
             for _ in 0..<5000 {
                 self.manager.increment()
             }
@@ -88,28 +88,28 @@ class NetworkActivityIndicatorManagerTests: XCTestCase {
     }
 
     func testIncrementObserver() {
-        let notificationCenter = NSNotificationCenter.defaultCenter()
+        let notificationCenter = NotificationCenter.default
         let notificationName = "com.ymyzk.NetworkActivityIndicatorManager.IncrementNotification"
         self.manager.registerForIncrementNotification(notificationName)
         expect(self.manager.counter) == 0
-        notificationCenter.postNotificationName(notificationName, object: nil)
+        notificationCenter.post(name: Notification.Name(rawValue: notificationName), object: nil)
         expect(self.manager.counter) == 1
         self.manager.unregisterForIncrementNotification(notificationName)
-        notificationCenter.postNotificationName(notificationName, object: nil)
+        notificationCenter.post(name: Notification.Name(rawValue: notificationName), object: nil)
         expect(self.manager.counter) == 1
     }
 
     func testDecrementObserver() {
-        let notificationCenter = NSNotificationCenter.defaultCenter()
+        let notificationCenter = NotificationCenter.default
         let notificationName = "com.ymyzk.NetworkActivityIndicatorManager.DecrementNotification"
         self.manager.increment()
         self.manager.increment()
         expect(self.manager.counter) == 2
         self.manager.registerForDecrementNotification(notificationName)
-        notificationCenter.postNotificationName(notificationName, object: nil)
+        notificationCenter.post(name: Notification.Name(rawValue: notificationName), object: nil)
         expect(self.manager.counter) == 1
         self.manager.unregisterForDecrementNotification(notificationName)
-        notificationCenter.postNotificationName(notificationName, object: nil)
+        notificationCenter.post(name: Notification.Name(rawValue: notificationName), object: nil)
         expect(self.manager.counter) == 1
     }
 }
