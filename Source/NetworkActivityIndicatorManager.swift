@@ -8,20 +8,20 @@
 import Foundation
 import UIKit
 
-open class NetworkActivityIndicatorManager {
+public class NetworkActivityIndicatorManager {
     // MARK: Life cycle
 
     /// The shared NetworkActivityIndicatorManager
-    open static let sharedManager = NetworkActivityIndicatorManager()
+    public static let sharedManager = NetworkActivityIndicatorManager()
 
-    fileprivate init() {}
+    private init() {}
 
     deinit {
         unregisterForAllNotifications()
     }
 
     /// Whether the network activity indicator is currently visible
-    open fileprivate(set) var isNetworkActivityIndicatorVisible: Bool = false {
+    public private(set) var isNetworkActivityIndicatorVisible: Bool = false {
         didSet {
             guard isNetworkActivityIndicatorVisible != oldValue else { return }
 
@@ -34,11 +34,11 @@ open class NetworkActivityIndicatorManager {
     // MARK: Counter
 
     /// Number of running activities
-    open fileprivate(set) var counter = 0
-    fileprivate let lock = NSLock()
+    public private(set) var counter = 0
+    private let lock = NSLock()
 
     /// Increment counter & update network activity indicator
-    open func increment() {
+    public func increment() {
         lock.lock()
         defer { lock.unlock() }
 
@@ -47,7 +47,7 @@ open class NetworkActivityIndicatorManager {
     }
 
     /// Decrement counter & update network activity indicator
-    open func decrement() {
+    public func decrement() {
         lock.lock()
         defer { lock.unlock() }
 
@@ -56,7 +56,7 @@ open class NetworkActivityIndicatorManager {
     }
 
     /// Reset counter & update network activity indicator
-    open func reset() {
+    public func reset() {
         lock.lock()
         defer { lock.unlock() }
 
@@ -64,7 +64,7 @@ open class NetworkActivityIndicatorManager {
         self.updateNetworkActivityIndicator()
     }
 
-    fileprivate func updateNetworkActivityIndicator() {
+    private func updateNetworkActivityIndicator() {
         // Ensure lock is locked
         guard !lock.try() else {
             lock.unlock()
@@ -76,35 +76,35 @@ open class NetworkActivityIndicatorManager {
     // MARK: Notifications
 
     /// Register a notification to increment the counter
-    open func registerForIncrementNotification(_ name: String) {
+    public func registerForIncrementNotification(_ name: String) {
         NotificationCenter.default.addObserver(self, selector: #selector(incrementForNotification), name: NSNotification.Name(rawValue: name), object: nil)
     }
 
     /// Register a notification to decrement the counter
-    open func registerForDecrementNotification(_ name: String) {
+    public func registerForDecrementNotification(_ name: String) {
         NotificationCenter.default.addObserver(self, selector: #selector(decrementForNotification), name: NSNotification.Name(rawValue: name), object: nil)
     }
 
     /// Unregister a notification to increment the counter
-    open func unregisterForIncrementNotification(_ name: String) {
+    public func unregisterForIncrementNotification(_ name: String) {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: name), object: nil)
     }
 
     /// Unregister a notification to decrement the counter
-    open func unregisterForDecrementNotification(_ name: String) {
+    public func unregisterForDecrementNotification(_ name: String) {
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name(rawValue: name), object: nil)
     }
 
     /// Unregister all notifications
-    fileprivate func unregisterForAllNotifications() {
+    private func unregisterForAllNotifications() {
         NotificationCenter.default.removeObserver(self)
     }
 
-    @objc fileprivate func incrementForNotification() {
+    @objc private func incrementForNotification() {
         increment()
     }
 
-    @objc fileprivate func decrementForNotification() {
+    @objc private func decrementForNotification() {
         decrement()
     }
 }
